@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GỬI THIỆP ONLINE</title>
+
+<!-- OG đúng vị trí -->
+
+<meta property="og:title" content="THIỆP MỜI ONLINE">
+<meta property="og:description" content="Gửi thiệp online giúp bạn tạo thiệp nhanh chóng, đẹp mắt chỉ trong vài giây.">
+<meta property="og:image" content="https://raw.githubusercontent.com/TuanLamVi/sendinvite/main/logo.jpg">
+<meta property="og:url" content="https://tuanlamvi.github.io/sendinvite/">
+<meta property="og:type" content="website">
+
+<!-- FONT -->
+
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Dancing+Script&family=Caveat&family=Great+Vibes&display=swap&subset=vietnamese" rel="stylesheet">
+
+<style>
+:root {
+    --pink1:#ff9a9e;
+    --pink2:#fad0c4;
+    --pink3:#fbc2eb;
+}
+
+body {
+    font-family: 'Be Vietnam Pro', sans-serif;
+    margin:0;
+    background:linear-gradient(135deg,var(--pink1),var(--pink3));
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.container{
+    width:100%;
+    max-width:420px;
+    background:white;
+    border-radius:22px;
+    padding:15px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.2);
+}
+
+.canvas-wrapper{
+    position:relative;
+}
+
+canvas{
+    width:100%;
+    border-radius:14px;
+}
+
+/* POPUP */
+.popup{
+    position:absolute;
+    bottom:10px;
+    left:10px;
+    right:10px;
+    background:rgba(255,255,255,0.95);
+    backdrop-filter:blur(10px);
+    border-radius:18px;
+    padding:12px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+    display:none;
+    transition:0.3s;
+}
+
+.popup.active{
+    bottom:80px;
+}
+
+/* INPUT */
+input,select{
+    width:100%;
+    padding:12px;
+    margin-top:6px;
+    border-radius:14px;
+    border:2px solid #f3c1cc;
+    font-size:15px;
+    outline:none;
+}
+
+input:focus,select:focus{
+    border-color:#e91e63;
+    box-shadow:0 0 0 3px rgba(233,30,99,0.15);
+}
+
+/* ROW */
+.row{
+    display:flex;
+    gap:8px;
+}
+.row select{flex:2;}
+.row input{flex:1;text-align:center;}
+
+/* COLOR */
+.palette{
+    display:flex;
+    justify-content:space-around;
+    margin-top:10px;
+}
+.color-dot{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    cursor:pointer;
+    border:2px solid white;
+    box-shadow:0 3px 6px rgba(0,0,0,0.2);
+}
+
+/* BUTTON */
+button{
+    width:100%;
+    margin-top:8px;
+    padding:12px;
+    border-radius:14px;
+    border:none;
+    font-weight:600;
+    cursor:pointer;
+}
+
+.btn-download{
+    background:linear-gradient(135deg,#ff758c,#ff7eb3);
+    color:white;
+}
+
+.btn-share{
+    background:linear-gradient(135deg,#36d1dc,#5b86e5);
+    color:white;
+}
+
+.action-group{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="canvas-wrapper" id="wrapper">
+    <canvas id="canvas"></canvas>
+
+```
+<div class="popup" id="popup">
+    <input type="text" id="text" placeholder="Ghi tên khách mời...">
+
+    <div class="row">
+        <select id="font">
+            <option value="'Dancing Script'">Dancing Script</option>
+            <option value="'Great Vibes'">💖 Great Vibes</option>
+            <option value="'Be Vietnam Pro'">Be Vietnam</option>
+            <option value="'Caveat'">Caveat</option>
+            <option value="Arial">Arial</option>
+        </select>
+
+        <input type="number" id="size" value="100">
+    </div>
+
+    <div class="palette" id="palette"></div>
+
+    <div class="action-group">
+        <button class="btn-download" onclick="save()">Tải về</button>
+        <button class="btn-share" onclick="share()">Chia sẻ</button>
+    </div>
+</div>
+```
+
+</div>
+
+<input type="text" placeholder="Bấm để nhập..." onclick="showPopup()">
+
+</div>
+
+<script>
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+
+const popup=document.getElementById("popup");
+const wrapper=document.getElementById("wrapper");
+
+const textInput=document.getElementById("text");
+const sizeInput=document.getElementById("size");
+const fontSelect=document.getElementById("font");
+
+function showPopup(){
+    popup.style.display="block";
+    popup.classList.add("active");
+    textInput.focus();
+}
+
+function hidePopup(){
+    popup.style.display="none";
+    popup.classList.remove("active");
+}
+
+wrapper.addEventListener("click",(e)=>{
+    if(e.target===wrapper){
+        hidePopup();
+    }
+});
+
+popup.addEventListener("click",(e)=>e.stopPropagation());
+
+const CONFIG={
+    imageUrl:"https://raw.githubusercontent.com/TuanLamVi/thiepmoiduc/main/thiep%20moi.png",
+    x:0.5,
+    y:0.15
+};
+
+let img=new Image();
+let color="#000";
+
+const colors=["#0D47A1","#e91e63","#ff1744","#b8860b","#fff","#333"];
+const palette=document.getElementById("palette");
+
+colors.forEach(c=>{
+    let d=document.createElement("div");
+    d.className="color-dot";
+    d.style.background=c;
+    d.onclick=()=>{color=c;draw();};
+    palette.appendChild(d);
+});
+
+img.crossOrigin="anonymous";
+img.src=CONFIG.imageUrl;
+
+img.onload=()=>{
+    canvas.width=img.width;
+    canvas.height=img.height;
+    draw();
+};
+
+async function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img,0,0);
+
+    let text=textInput.value;
+    let size=parseInt(sizeInput.value)||100;
+    let font=fontSelect.value;
+
+    await document.fonts.load(size+"px "+font);
+    await document.fonts.ready;
+
+    if(text){
+        ctx.fillStyle=color;
+        ctx.font=size+"px "+font;
+        ctx.textAlign="center";
+        ctx.fillText(text,canvas.width*CONFIG.x,canvas.height*CONFIG.y);
+    }
+}
+
+textInput.addEventListener("input",draw);
+sizeInput.addEventListener("input",draw);
+fontSelect.addEventListener("change",draw);
+
+function save(){
+    let a=document.createElement("a");
+    a.href=canvas.toDataURL();
+    a.download="thiep.png";
+    a.click();
+}
+
+async function share(){
+    if(!navigator.share) return alert("Không hỗ trợ");
+
+    let blob=await (await fetch(canvas.toDataURL())).blob();
+    let file=new File([blob],"thiep.png",{type:"image/png"});
+
+    navigator.share({files:[file]});
+}
+</script>
+
+</body>
+</html>
