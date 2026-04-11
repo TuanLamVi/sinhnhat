@@ -1,282 +1,315 @@
 <!DOCTYPE html>
-
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GỬI THIỆP ONLINE</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GỬI THIỆP ONLINE</title>
+    <meta property="og:title" content="THIỆP MỜI ONLINE">
+    <meta property="og:description" content="Gửi thiệp online giúp bạn tạo thiệp nhanh chóng, đẹp mắt chỉ trong vài giây.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/TuanLamVi/sendinvite/main/logo.jpg">
+    <meta property="og:url" content="https://tuanlamvi.github.io/sendinvite/">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script&family=Caveat&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --pink1: #ff9a9e;
+            --pink3: #fbc2eb;
+        }
+        body {
+            font-family: 'Be Vietnam Pro', sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, var(--pink1), var(--pink3));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border-radius: 22px;
+            padding: 15px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        .canvas-wrapper {
+            position: relative;
+        }
+        canvas {
+            width: 100%;
+            border-radius: 14px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
 
-<!-- OG đúng vị trí -->
+        /* POPUP SIÊU GỌN + SIÊU TRONG SUỐT */
+        .popup {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            background: rgba(255, 255, 255, 0.38);   /* Siêu trong suốt */
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 10px 12px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 20;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .popup.active {
+            bottom: 62px;
+        }
+        .popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+        .popup-title {
+            font-size: 14.5px;
+            font-weight: 600;
+            color: #e91e63;
+        }
+        .close-btn {
+            width: 26px;
+            height: 26px;
+            border: none;
+            background: rgba(0,0,0,0.1);
+            border-radius: 50%;
+            font-size: 19px;
+            cursor: pointer;
+            color: #333;
+        }
 
-<meta property="og:title" content="THIỆP MỜI ONLINE">
-<meta property="og:description" content="Gửi thiệp online giúp bạn tạo thiệp nhanh chóng, đẹp mắt chỉ trong vài giây.">
-<meta property="og:image" content="https://raw.githubusercontent.com/TuanLamVi/sendinvite/main/logo.jpg">
-<meta property="og:url" content="https://tuanlamvi.github.io/sendinvite/">
-<meta property="og:type" content="website">
+        .section {
+            margin-bottom: 7px;
+        }
+        .section-label {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #e91e63;
+            margin-bottom: 3px;
+        }
 
-<!-- FONT -->
+        input, select {
+            width: 100%;
+            padding: 9px 11px;
+            border-radius: 11px;
+            border: 2px solid #f8c4d0;
+            font-size: 14.8px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        input:focus, select:focus {
+            border-color: #e91e63;
+        }
 
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700&family=Dancing+Script&family=Caveat&family=Great+Vibes&display=swap&subset=vietnamese" rel="stylesheet">
+        .size-slider {
+            background: rgba(248,248,248,0.9);
+            padding: 7px 11px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+        .size-slider input[type="range"] {
+            flex: 1;
+            accent-color: #e91e63;
+        }
+        #size-value {
+            font-weight: 700;
+            font-size: 15.5px;
+            min-width: 36px;
+            text-align: center;
+            color: #e91e63;
+        }
 
-<style>
-:root {
-    --pink1:#ff9a9e;
-    --pink2:#fad0c4;
-    --pink3:#fbc2eb;
-}
+        .palette {
+            display: flex;
+            justify-content: space-around;
+            margin: 5px 0 3px 0;
+        }
+        .color-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
 
-body {
-    font-family: 'Be Vietnam Pro', sans-serif;
-    margin:0;
-    background:linear-gradient(135deg,var(--pink1),var(--pink3));
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-}
-
-.container{
-    width:100%;
-    max-width:420px;
-    background:white;
-    border-radius:22px;
-    padding:15px;
-    box-shadow:0 15px 40px rgba(0,0,0,0.2);
-}
-
-.canvas-wrapper{
-    position:relative;
-}
-
-canvas{
-    width:100%;
-    border-radius:14px;
-}
-
-/* POPUP */
-.popup{
-    position:absolute;
-    bottom:10px;
-    left:10px;
-    right:10px;
-    background:rgba(255,255,255,0.95);
-    backdrop-filter:blur(10px);
-    border-radius:18px;
-    padding:12px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.25);
-    display:none;
-    transition:0.3s;
-}
-
-.popup.active{
-    bottom:80px;
-}
-
-/* INPUT */
-input,select{
-    width:100%;
-    padding:12px;
-    margin-top:6px;
-    border-radius:14px;
-    border:2px solid #f3c1cc;
-    font-size:15px;
-    outline:none;
-}
-
-input:focus,select:focus{
-    border-color:#e91e63;
-    box-shadow:0 0 0 3px rgba(233,30,99,0.15);
-}
-
-/* ROW */
-.row{
-    display:flex;
-    gap:8px;
-}
-.row select{flex:2;}
-.row input{flex:1;text-align:center;}
-
-/* COLOR */
-.palette{
-    display:flex;
-    justify-content:space-around;
-    margin-top:10px;
-}
-.color-dot{
-    width:28px;
-    height:28px;
-    border-radius:50%;
-    cursor:pointer;
-    border:2px solid white;
-    box-shadow:0 3px 6px rgba(0,0,0,0.2);
-}
-
-/* BUTTON */
-button{
-    width:100%;
-    margin-top:8px;
-    padding:12px;
-    border-radius:14px;
-    border:none;
-    font-weight:600;
-    cursor:pointer;
-}
-
-.btn-download{
-    background:linear-gradient(135deg,#ff758c,#ff7eb3);
-    color:white;
-}
-
-.btn-share{
-    background:linear-gradient(135deg,#36d1dc,#5b86e5);
-    color:white;
-}
-
-.action-group{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:8px;
-}
-</style>
-
+        .action-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 9px;
+            margin-top: 10px;
+        }
+        button {
+            padding: 11px;
+            border-radius: 11px;
+            border: none;
+            font-weight: 600;
+            font-size: 14.5px;
+            cursor: pointer;
+        }
+        .btn-download {
+            background: linear-gradient(135deg, #ff758c, #ff7eb3);
+            color: white;
+        }
+        .btn-share {
+            background: linear-gradient(135deg, #36d1dc, #5b86e5);
+            color: white;
+        }
+    </style>
 </head>
-
 <body>
-
-<div class="container">
-
-<div class="canvas-wrapper" id="wrapper">
-    <canvas id="canvas"></canvas>
-
-```
-<div class="popup" id="popup">
-    <input type="text" id="text" placeholder="Ghi tên khách mời...">
-
-    <div class="row">
-        <select id="font">
-            <option value="'Dancing Script'">Dancing Script</option>
-            <option value="'Great Vibes'">💖 Great Vibes</option>
-            <option value="'Be Vietnam Pro'">Be Vietnam</option>
-            <option value="'Caveat'">Caveat</option>
-            <option value="Arial">Arial</option>
-        </select>
-
-        <input type="number" id="size" value="100">
+    <div class="container">
+        <div class="canvas-wrapper" id="wrapper">
+            <canvas id="canvas"></canvas>
+            
+            <div class="popup" id="popup">
+                <div class="popup-header">
+                    <div class="popup-title">✏️ Chỉnh sửa thiệp</div>
+                    <button class="close-btn" onclick="hidePopup()">×</button>
+                </div>
+                
+                <div class="section">
+                    <label class="section-label">NỘI DUNG</label>
+                    <input type="text" id="text" placeholder="Nhập tên khách mời...">
+                </div>
+                
+                <div class="section">
+                    <label class="section-label">KIỂU CHỮ</label>
+                    <select id="font">
+                        <option value="'Great Vibes'">Great Vibes - Sang trọng</option>
+                        <option value="'Dancing Script'">Dancing Script</option>
+                        <option value="'Caveat'">Caveat - Viết tay</option>
+                        <option value="'Be Vietnam Pro'">Be Vietnam Pro</option>
+                        <option value="Arial">Arial</option>
+                    </select>
+                </div>
+                
+                <div class="section">
+                    <label class="section-label">KÍCH THƯỚC CHỮ</label>
+                    <div class="size-slider">
+                        <input type="range" id="size" min="40" max="260" value="115" step="2">
+                        <span id="size-value">115</span>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <label class="section-label">MÀU CHỮ</label>
+                    <div class="palette" id="palette"></div>
+                </div>
+                
+                <div class="action-group">
+                    <button class="btn-download" onclick="save()">📥 Tải về</button>
+                    <button class="btn-share" onclick="share()">📤 Chia sẻ</button>
+                </div>
+            </div>
+        </div>
+        
+        <input type="text" placeholder="Bấm vào đây để chỉnh nội dung thiệp..." 
+               onclick="showPopup()" style="margin-top:12px; text-align:center; font-size:15px;">
     </div>
 
-    <div class="palette" id="palette"></div>
+    <script>
+        const canvas = document.getElementById("canvas");
+        const ctx = canvas.getContext("2d");
+        const popup = document.getElementById("popup");
+        const wrapper = document.getElementById("wrapper");
+        const textInput = document.getElementById("text");
+        const sizeSlider = document.getElementById("size");
+        const sizeValue = document.getElementById("size-value");
+        const fontSelect = document.getElementById("font");
 
-    <div class="action-group">
-        <button class="btn-download" onclick="save()">Tải về</button>
-        <button class="btn-share" onclick="share()">Chia sẻ</button>
-    </div>
-</div>
-```
+        let color = "#000";
 
-</div>
+        const CONFIG = {
+            imageUrl: "https://raw.githubusercontent.com/TuanLamVi/thiepmoiduc/main/thiep%20moi.png",
+            x: 0.5,
+            y: 0.18
+        };
 
-<input type="text" placeholder="Bấm để nhập..." onclick="showPopup()">
+        let img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = CONFIG.imageUrl;
 
-</div>
+        img.onload = () => {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            draw();
+        };
 
-<script>
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
+        const colors = ["#000000", "#e91e63", "#9c27b0", "#3f51b5", "#d81b60", "#ff5722", "#ffffff"];
+        const palette = document.getElementById("palette");
+        colors.forEach(c => {
+            let d = document.createElement("div");
+            d.className = "color-dot";
+            d.style.background = c;
+            d.onclick = () => { color = c; draw(); };
+            palette.appendChild(d);
+        });
 
-const popup=document.getElementById("popup");
-const wrapper=document.getElementById("wrapper");
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0);
 
-const textInput=document.getElementById("text");
-const sizeInput=document.getElementById("size");
-const fontSelect=document.getElementById("font");
+            const text = textInput.value.trim();
+            if (text) {
+                ctx.fillStyle = color;
+                ctx.font = `${sizeSlider.value}px ${fontSelect.value}`;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+                ctx.shadowColor = "rgba(0,0,0,0.4)";
+                ctx.shadowBlur = 10;
+                ctx.shadowOffsetX = 2;
+                ctx.shadowOffsetY = 2;
+                ctx.fillText(text, canvas.width * CONFIG.x, canvas.height * CONFIG.y);
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+            }
+        }
 
-function showPopup(){
-    popup.style.display="block";
-    popup.classList.add("active");
-    textInput.focus();
-}
+        sizeSlider.addEventListener("input", () => {
+            sizeValue.textContent = sizeSlider.value;
+            draw();
+        });
+        textInput.addEventListener("input", draw);
+        fontSelect.addEventListener("change", draw);
 
-function hidePopup(){
-    popup.style.display="none";
-    popup.classList.remove("active");
-}
+        function showPopup() {
+            popup.style.display = "block";
+            setTimeout(() => popup.classList.add("active"), 10);
+            textInput.focus();
+        }
 
-wrapper.addEventListener("click",(e)=>{
-    if(e.target===wrapper){
-        hidePopup();
-    }
-});
+        function hidePopup() {
+            popup.style.display = "none";
+            popup.classList.remove("active");
+        }
 
-popup.addEventListener("click",(e)=>e.stopPropagation());
+        wrapper.addEventListener("click", (e) => {
+            if (e.target === wrapper) hidePopup();
+        });
 
-const CONFIG={
-    imageUrl:"https://raw.githubusercontent.com/TuanLamVi/thiepmoiduc/main/thiep%20moi.png",
-    x:0.5,
-    y:0.15
-};
+        function save() {
+            const a = document.createElement("a");
+            a.href = canvas.toDataURL("image/png");
+            a.download = "thiep_moi.png";
+            a.click();
+        }
 
-let img=new Image();
-let color="#000";
-
-const colors=["#0D47A1","#e91e63","#ff1744","#b8860b","#fff","#333"];
-const palette=document.getElementById("palette");
-
-colors.forEach(c=>{
-    let d=document.createElement("div");
-    d.className="color-dot";
-    d.style.background=c;
-    d.onclick=()=>{color=c;draw();};
-    palette.appendChild(d);
-});
-
-img.crossOrigin="anonymous";
-img.src=CONFIG.imageUrl;
-
-img.onload=()=>{
-    canvas.width=img.width;
-    canvas.height=img.height;
-    draw();
-};
-
-async function draw(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(img,0,0);
-
-    let text=textInput.value;
-    let size=parseInt(sizeInput.value)||100;
-    let font=fontSelect.value;
-
-    await document.fonts.load(size+"px "+font);
-    await document.fonts.ready;
-
-    if(text){
-        ctx.fillStyle=color;
-        ctx.font=size+"px "+font;
-        ctx.textAlign="center";
-        ctx.fillText(text,canvas.width*CONFIG.x,canvas.height*CONFIG.y);
-    }
-}
-
-textInput.addEventListener("input",draw);
-sizeInput.addEventListener("input",draw);
-fontSelect.addEventListener("change",draw);
-
-function save(){
-    let a=document.createElement("a");
-    a.href=canvas.toDataURL();
-    a.download="thiep.png";
-    a.click();
-}
-
-async function share(){
-    if(!navigator.share) return alert("Không hỗ trợ");
-
-    let blob=await (await fetch(canvas.toDataURL())).blob();
-    let file=new File([blob],"thiep.png",{type:"image/png"});
-
-    navigator.share({files:[file]});
-}
-</script>
-
+        async function share() {
+            if (!navigator.share) return alert("Trình duyệt không hỗ trợ chia sẻ");
+            try {
+                const blob = await (await fetch(canvas.toDataURL("image/png"))).blob();
+                const file = new File([blob], "thiep_moi.png", { type: "image/png" });
+                await navigator.share({ files: [file] });
+            } catch (e) {}
+        }
+    </script>
 </body>
 </html>
