@@ -42,13 +42,12 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        /* POPUP SIÊU GỌN + SIÊU TRONG SUỐT */
         .popup {
             position: absolute;
             bottom: 12px;
             left: 12px;
             right: 12px;
-            background: rgba(255, 255, 255, 0.38);   /* Siêu trong suốt */
+            background: rgba(255, 255, 255, 0.38);
             backdrop-filter: blur(10px);
             border-radius: 16px;
             padding: 10px 12px;
@@ -72,14 +71,19 @@
             color: #e91e63;
         }
         .close-btn {
-            width: 26px;
-            height: 26px;
+            width: 34px;
+            height: 34px;
             border: none;
-            background: rgba(0,0,0,0.1);
+            background: #ff1744;
+            color: white;
             border-radius: 50%;
-            font-size: 19px;
+            font-size: 22px;
+            font-weight: bold;
             cursor: pointer;
-            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(255,23,68,0.3);
         }
 
         .section {
@@ -170,7 +174,7 @@
             
             <div class="popup" id="popup">
                 <div class="popup-header">
-                    <div class="popup-title">✏️ Nhập thông tin thiệp</div>
+                    <div class="popup-title">✏️ Chỉnh sửa thiệp</div>
                     <button class="close-btn" onclick="hidePopup()">×</button>
                 </div>
                 
@@ -193,8 +197,8 @@
                 <div class="section">
                     <label class="section-label">KÍCH THƯỚC CHỮ</label>
                     <div class="size-slider">
-                        <input type="range" id="size" min="40" max="260" value="115" step="2">
-                        <span id="size-value">115</span>
+                        <input type="range" id="size" min="40" max="280" value="120" step="2">
+                        <span id="size-value">120</span>
                     </div>
                 </div>
                 
@@ -204,13 +208,13 @@
                 </div>
                 
                 <div class="action-group">
-                    <button class="btn-download" onclick="save()">📥 TẢI VỀ</button>
-                    <button class="btn-share" onclick="share()">📤 GỬI</button>
+                    <button class="btn-download" onclick="save()">📥 Tải về</button>
+                    <button class="btn-share" onclick="share()">📤 Chia sẻ</button>
                 </div>
             </div>
         </div>
         
-        <input type="text" placeholder="Bấm vào đây để nhập nội dung thiệp..." 
+        <input type="text" placeholder="Bấm vào đây để chỉnh nội dung thiệp..." 
                onclick="showPopup()" style="margin-top:12px; text-align:center; font-size:15px;">
     </div>
 
@@ -228,8 +232,7 @@
 
         const CONFIG = {
             imageUrl: "https://raw.githubusercontent.com/TuanLamVi/thiepmoiduc/main/thiep%20moi.png",
-            x: 0.5,
-            y: 0.14
+            fixedBottomY: 0.172   // Vị trí cố định phần dưới chữ (càng lớn càng xuống dưới)
         };
 
         let img = new Image();
@@ -258,15 +261,23 @@
 
             const text = textInput.value.trim();
             if (text) {
+                const fontSize = parseFloat(sizeSlider.value);
+                
                 ctx.fillStyle = color;
-                ctx.font = `${sizeSlider.value}px ${fontSelect.value}`;
+                ctx.font = `${fontSize}px ${fontSelect.value}`;
                 ctx.textAlign = "center";
-                ctx.textBaseline = "middle";
-                ctx.shadowColor = "rgba(0,0,0,0.4)";
+                ctx.textBaseline = "bottom";     // Quan trọng: Cố định phần dưới
+
+                // Vị trí Y cố định phần dưới chữ
+                const textY = canvas.height * CONFIG.fixedBottomY;
+
+                ctx.shadowColor = "rgba(0,0,0,0.45)";
                 ctx.shadowBlur = 10;
                 ctx.shadowOffsetX = 2;
-                ctx.shadowOffsetY = 2;
-                ctx.fillText(text, canvas.width * CONFIG.x, canvas.height * CONFIG.y);
+                ctx.shadowOffsetY = 3;
+                
+                ctx.fillText(text, canvas.width * 0.5, textY);
+                
                 ctx.shadowBlur = 0;
                 ctx.shadowOffsetX = 0;
                 ctx.shadowOffsetY = 0;
