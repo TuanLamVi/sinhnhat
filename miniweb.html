@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="THIỆP MỜI ONLINE - Tạo Đẹp Trong 30 Giây">
+    <meta property="og:description" content="Tạo thiệp mời sinh nhật, đám cưới, khai trương... sang trọng và chuyên nghiệp.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/TuanLamVi/miniweb/main/banner.jpg">
+    <meta property="og:url" content="https://tuanlamvi.github.io/miniweb/">
+    
+    <title>Thiệp Mời Online - Tạo Thiệp Đẹp Nhất</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&amp;family=Roboto:wght@400;500;700&amp;display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary: #e91e63;
+        }
+        
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #fff0f5 0%, #ffe4ed 100%);
+            color: #333;
+            font-size: 18px;
+        }
+        
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), 
+                        url('https://raw.githubusercontent.com/TuanLamVi/miniweb/main/banner.jpg') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.8rem;
+            margin: 0 0 20px 0;
+        }
+        
+        .highlight {
+            font-size: 1.65rem;
+            margin: 25px 0 45px;
+            line-height: 1.5;
+        }
+        
+        /* NÚT BẤM CÓ VIỀN TRẮNG - đẹp như bạn thích */
+        .btn {
+            display: inline-block;
+            padding: 20px 52px;
+            font-size: 1.35rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #e91e63, #ff4d7e);
+            color: white;
+            border-radius: 50px;
+            text-decoration: none;
+            box-shadow: 0 12px 35px rgba(233, 30, 99, 0.45);
+            transition: all 0.4s ease;
+            border: 3px solid white;           /* ← Viền trắng đẹp */
+        }
+        
+        .btn:hover {
+            transform: translateY(-8px) scale(1.08);
+            box-shadow: 0 18px 40px rgba(233, 30, 99, 0.55);
+            background: linear-gradient(45deg, #c2185b, #e91e63);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 24px;
+            padding: 32px;
+            margin: 25px auto;
+            max-width: 440px;
+            box-shadow: 0 15px 45px rgba(0,0,0,0.12);
+        }
+        
+        .card h3 {
+            font-size: 1.55rem;
+        }
+        
+        .card p {
+            font-size: 1.1rem;
+        }
+        
+        .footer {
+            font-size: 1.1rem;
+            text-align: center;
+            padding: 50px 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <section class="hero">
+        <div class="container">
+            <h1>Thiệp Mời Online</h1>
+            <p class="highlight">
+                Tạo thiệp mời <strong>đẹp - sang - chuyên nghiệp</strong><br>
+                chỉ trong <strong>30 giây</strong>. Không cần in ấn!
+            </p>
+            
+            <a href="https://tuanlamvi.github.io/sinhnhat/" target="_blank" class="btn">
+                ✨ TẠO THIỆP NGAY - MIỄN PHÍ 100%
+            </a>
+        </div>
+    </section>
+
+    <div class="container">
+        <div style="text-align:center; margin: 50px 0 30px;">
+            <img src="https://raw.githubusercontent.com/TuanLamVi/miniweb/main/banner.jpg" 
+                 style="max-width: 420px; border-radius: 24px; box-shadow: 0 25px 50px rgba(0,0,0,0.2);" 
+                 alt="Mẫu thiệp mời">
+        </div>
+
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 22px;">
+            <div class="card">
+                <h3>⚡ Siêu Tốc</h3>
+                <p>Nhập tên + lời chúc → Tạo ngay lập tức</p>
+            </div>
+            <div class="card">
+                <h3>💖 Cá Nhân Hóa Cao</h3>
+                <p>Thay tên, ảnh, màu sắc, font chữ theo ý bạn</p>
+            </div>
+            <div class="card">
+                <h3>📲 Gửi Dễ Dàng</h3>
+                <p>Chia sẻ link trực tiếp qua Zalo, Messenger, Facebook</p>
+            </div>
+        </div>
+
+        <div style="text-align:center; margin: 60px 0 40px;">
+            <a href="https://tuanlamvi.github.io/sinhnhat/" target="_blank" class="btn">
+                🎉 BẮT ĐẦU TẠO THIỆP NGAY BÂY GIỜ
+            </a>
+        </div>
+    </div>
+
+    <div class="footer">
+        © 2026 Thiệp Mời Online - Tạo thiệp đẹp trong một nốt nhạc 💌
+    </div>
+
+    <script>
+        function createFirework() {
+            const colors = ['#e91e63', '#ff9800', '#ff4081', '#ffffff', '#ffd54f'];
+            const fw = document.createElement("div");
+            fw.className = "firework";
+            fw.style.left = Math.random() * window.innerWidth + "px";
+            fw.style.top = Math.random() * (window.innerHeight * 0.75) + "px";
+            fw.style.background = colors[Math.floor(Math.random() * colors.length)];
+            document.body.appendChild(fw);
+            setTimeout(() => fw.remove(), 1300);
+        }
+        
+        setInterval(() => { if (Math.random() > 0.35) createFirework(); }, 250);
+        window.onload = () => { for(let i = 0; i < 10; i++) setTimeout(createFirework, i * 100); };
+    </script>
+</body>
+</html>
