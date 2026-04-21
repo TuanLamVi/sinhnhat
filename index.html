@@ -4,13 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GỬI THIỆP ONLINE</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="https://raw.githubusercontent.com/TuanLamVi/invite/main/favicon.png" type="image/png">
+    <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/TuanLamVi/invite/main/favicon.png">
+
     <meta property="og:title" content="THIỆP MỜI ONLINE">
     <meta property="og:description" content="Gửi thiệp online giúp bạn tạo thiệp nhanh chóng, đẹp mắt chỉ trong một nốt nhạc. Tùy chỉnh font chữ, màu sắc và tải về hoặc gửi trực tiếp ngay trên điện thoại.">
     <meta property="og:image" content="https://raw.githubusercontent.com/TuanLamVi/sendinvite/main/logo.jpg">
     <meta property="og:url" content="https://tuanlamvi.github.io/invite/">
-    
+   
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Dancing+Script&family=Caveat&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+   
     <style>
         :root {
             --pink1: #ff9a9e;
@@ -24,6 +29,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            position: relative;
         }
         .container {
             width: 100%;
@@ -41,7 +47,6 @@
             border-radius: 14px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-
         .popup {
             position: absolute;
             bottom: 12px;
@@ -85,7 +90,6 @@
             justify-content: center;
             box-shadow: 0 2px 8px rgba(255,23,68,0.3);
         }
-
         .section {
             margin-bottom: 7px;
         }
@@ -95,7 +99,6 @@
             color: #e91e63;
             margin-bottom: 3px;
         }
-
         input, select {
             width: 100%;
             padding: 9px 11px;
@@ -108,7 +111,6 @@
         input:focus, select:focus {
             border-color: #e91e63;
         }
-
         .size-slider {
             background: rgba(248,248,248,0.9);
             padding: 7px 11px;
@@ -128,7 +130,6 @@
             text-align: center;
             color: #e91e63;
         }
-
         .palette {
             display: flex;
             justify-content: space-around;
@@ -142,7 +143,6 @@
             border: 3px solid white;
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
-
         .action-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -165,24 +165,111 @@
             background: linear-gradient(135deg, #36d1dc, #5b86e5);
             color: white;
         }
+
+        /* ==================== FOOTER CẢI THIỆN ==================== */
+        .contact-footer {
+            margin-top: 26px;
+            padding: 20px 18px;
+            background: linear-gradient(135deg, #fff0f5, #ffe4f0);
+            border-radius: 20px;
+            border: 3px solid #ff9a9e;
+            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.22);
+            text-align: center;
+        }
+
+        .contact-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #e91e63;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            letter-spacing: 0.6px;
+        }
+
+        .contact-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .contact-btn {
+            flex: 1;
+            max-width: 175px;
+            background: white;
+            border-radius: 16px;
+            padding: 14px 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: #e91e63;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid #f8c4d0;
+        }
+
+        .contact-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 12px 25px rgba(233, 30, 99, 0.3);
+            border-color: #ff9a9e;
+        }
+
+        .contact-btn .icon {
+            font-size: 32px;
+            line-height: 1;
+            filter: drop-shadow(0 2px 4px rgba(233, 30, 99, 0.2));
+        }
+
+        .contact-btn div {
+            text-align: left;
+        }
+
+        .contact-btn .label {
+            font-size: 12.5px;
+            font-weight: 600;
+            opacity: 0.85;
+            line-height: 1;
+        }
+
+        .contact-btn .number {
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-top: 2px;
+        }
+
+        .contact-support {
+            margin-top: 16px;
+            font-size: 13px;
+            color: #e91e63;
+            opacity: 0.9;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="canvas-wrapper" id="wrapper">
             <canvas id="canvas"></canvas>
-            
+           
             <div class="popup" id="popup">
                 <div class="popup-header">
                     <div class="popup-title">✏️ Chỉnh sửa thiệp</div>
                     <button class="close-btn" onclick="hidePopup()">×</button>
                 </div>
-                
+               
                 <div class="section">
                     <label class="section-label">NỘI DUNG</label>
                     <input type="text" id="text" placeholder="Nhập tên khách mời...">
                 </div>
-                
+               
                 <div class="section">
                     <label class="section-label">KIỂU CHỮ</label>
                     <select id="font">
@@ -193,7 +280,7 @@
                         <option value="Arial">Arial</option>
                     </select>
                 </div>
-                
+               
                 <div class="section">
                     <label class="section-label">KÍCH THƯỚC CHỮ</label>
                     <div class="size-slider">
@@ -201,21 +288,52 @@
                         <span id="size-value">120</span>
                     </div>
                 </div>
-                
+               
                 <div class="section">
                     <label class="section-label">MÀU CHỮ</label>
                     <div class="palette" id="palette"></div>
                 </div>
-                
+               
                 <div class="action-group">
                     <button class="btn-download" onclick="save()">📥 TẢI VỀ</button>
                     <button class="btn-share" onclick="share()">📤 GỬI</button>
                 </div>
             </div>
         </div>
-        
-        <input type="text" placeholder="Bấm vào đây để chỉnh nội dung thiệp..." 
+       
+        <input type="text" placeholder="Bấm vào đây để chỉnh nội dung thiệp..."
                onclick="showPopup()" style="margin-top:12px; text-align:center; font-size:15px;">
+
+        <!-- FOOTER ĐÃ CẢI THIỆN -->
+        <div class="contact-footer">
+            <div class="contact-title">
+                ❤️ Liên hệ hỗ trợ ngay
+            </div>
+            
+            <div class="contact-row">
+                <!-- Hotline -->
+                <a href="tel:0984062140" class="contact-btn">
+                    <span class="icon">📱</span>
+                    <div>
+                        <span class="label">Hotline</span>
+                        <strong class="number">0984 062 140</strong>
+                    </div>
+                </a>
+                
+                <!-- Zalo -->
+                <a href="https://zalo.me/0984062140" target="_blank" class="contact-btn" rel="noopener">
+                    <span class="icon">💬</span>
+                    <div>
+                        <span class="label">Zalo</span>
+                        <strong class="number">0984 062 140</strong>
+                    </div>
+                </a>
+            </div>
+
+            <div class="contact-support">
+                Hỗ trợ 24/7 • Tạo thiệp chỉ trong 10 giây ✨
+            </div>
+        </div>
     </div>
 
     <script>
@@ -227,24 +345,19 @@
         const sizeSlider = document.getElementById("size");
         const sizeValue = document.getElementById("size-value");
         const fontSelect = document.getElementById("font");
-
         let color = "#000";
-
         const CONFIG = {
             imageUrl: "https://raw.githubusercontent.com/TuanLamVi/sinhnhat/main/thiepmau7.png",
-            fixedBottomY: 0.152   // Vị trí cố định phần dưới chữ (càng lớn càng xuống dưới)
+            fixedBottomY: 0.152
         };
-
         let img = new Image();
         img.crossOrigin = "anonymous";
         img.src = CONFIG.imageUrl;
-
         img.onload = () => {
             canvas.width = img.width;
             canvas.height = img.height;
             draw();
         };
-
         const colors = ["#000000", "#e91e63", "#9c27b0", "#3f51b5", "#d81b60", "#ff5722", "#ffffff"];
         const palette = document.getElementById("palette");
         colors.forEach(c => {
@@ -254,65 +367,51 @@
             d.onclick = () => { color = c; draw(); };
             palette.appendChild(d);
         });
-
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0);
-
             const text = textInput.value.trim();
             if (text) {
                 const fontSize = parseFloat(sizeSlider.value);
-                
                 ctx.fillStyle = color;
                 ctx.font = `${fontSize}px ${fontSelect.value}`;
                 ctx.textAlign = "center";
-                ctx.textBaseline = "bottom";     // Quan trọng: Cố định phần dưới
-
-                // Vị trí Y cố định phần dưới chữ
+                ctx.textBaseline = "bottom";
                 const textY = canvas.height * CONFIG.fixedBottomY;
-
                 ctx.shadowColor = "rgba(0,0,0,0.45)";
                 ctx.shadowBlur = 10;
                 ctx.shadowOffsetX = 2;
                 ctx.shadowOffsetY = 3;
-                
                 ctx.fillText(text, canvas.width * 0.5, textY);
-                
                 ctx.shadowBlur = 0;
                 ctx.shadowOffsetX = 0;
                 ctx.shadowOffsetY = 0;
             }
         }
-
         sizeSlider.addEventListener("input", () => {
             sizeValue.textContent = sizeSlider.value;
             draw();
         });
         textInput.addEventListener("input", draw);
         fontSelect.addEventListener("change", draw);
-
         function showPopup() {
             popup.style.display = "block";
             setTimeout(() => popup.classList.add("active"), 10);
             textInput.focus();
         }
-
         function hidePopup() {
             popup.style.display = "none";
             popup.classList.remove("active");
         }
-
         wrapper.addEventListener("click", (e) => {
             if (e.target === wrapper) hidePopup();
         });
-
         function save() {
             const a = document.createElement("a");
             a.href = canvas.toDataURL("image/png");
             a.download = "thiep_moi.png";
             a.click();
         }
-
         async function share() {
             if (!navigator.share) return alert("Trình duyệt không hỗ trợ chia sẻ");
             try {
