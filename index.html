@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GỬI THIỆP ONLINE</title>
     
-    <!-- Favicon -->
     <link rel="icon" href="https://raw.githubusercontent.com/TuanLamVi/invite/main/favicon.png" type="image/png">
     <link rel="apple-touch-icon" href="https://raw.githubusercontent.com/TuanLamVi/invite/main/favicon.png">
 
@@ -46,13 +45,14 @@
             width: 100%;
             border-radius: 14px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            cursor: pointer;
         }
         .popup {
             position: absolute;
             bottom: 12px;
             left: 12px;
             right: 12px;
-            background: rgba(255, 255, 255, 0.38);
+            background: rgba(255, 255, 255, 0.85); /* Tăng độ đục một chút để dễ nhìn */
             backdrop-filter: blur(10px);
             border-radius: 16px;
             padding: 10px 12px;
@@ -60,8 +60,10 @@
             display: none;
             z-index: 20;
             border: 1px solid rgba(255,255,255,0.5);
+            transition: all 0.3s ease;
         }
         .popup.active {
+            display: block;
             bottom: 62px;
         }
         .popup-header {
@@ -166,7 +168,7 @@
             color: white;
         }
 
-        /* ==================== FOOTER CẢI THIỆN ==================== */
+        /* ==================== FOOTER ==================== */
         .contact-footer {
             margin-top: 26px;
             padding: 20px 18px;
@@ -258,18 +260,18 @@
     <div class="container">
         <div class="canvas-wrapper" id="wrapper">
             <canvas id="canvas"></canvas>
-           
+            
             <div class="popup" id="popup">
                 <div class="popup-header">
                     <div class="popup-title">✏️ Chỉnh sửa thiệp</div>
                     <button class="close-btn" onclick="hidePopup()">×</button>
                 </div>
-               
+                
                 <div class="section">
                     <label class="section-label">NỘI DUNG</label>
                     <input type="text" id="text" placeholder="Nhập tên khách mời...">
                 </div>
-               
+                
                 <div class="section">
                     <label class="section-label">KIỂU CHỮ</label>
                     <select id="font">
@@ -280,7 +282,7 @@
                         <option value="Arial">Arial</option>
                     </select>
                 </div>
-               
+                
                 <div class="section">
                     <label class="section-label">KÍCH THƯỚC CHỮ</label>
                     <div class="size-slider">
@@ -288,30 +290,28 @@
                         <span id="size-value">120</span>
                     </div>
                 </div>
-               
+                
                 <div class="section">
                     <label class="section-label">MÀU CHỮ</label>
                     <div class="palette" id="palette"></div>
                 </div>
-               
+                
                 <div class="action-group">
                     <button class="btn-download" onclick="save()">📥 TẢI VỀ</button>
                     <button class="btn-share" onclick="share()">📤 GỬI</button>
                 </div>
             </div>
         </div>
-       
-        <input type="text" placeholder="Bấm vào đây để chỉnh nội dung thiệp..."
-               onclick="showPopup()" style="margin-top:12px; text-align:center; font-size:15px;">
+        
+        <input type="text" id="openPopupBtn" placeholder="Bấm vào đây để chỉnh nội dung thiệp..."
+                onclick="showPopup()" style="margin-top:12px; text-align:center; font-size:15px;">
 
-        <!-- FOOTER ĐÃ CẢI THIỆN -->
         <div class="contact-footer">
             <div class="contact-title">
                 ❤️ Liên hệ hỗ trợ ngay
             </div>
             
             <div class="contact-row">
-                <!-- Hotline -->
                 <a href="tel:0984062140" class="contact-btn">
                     <span class="icon">📱</span>
                     <div>
@@ -320,7 +320,6 @@
                     </div>
                 </a>
                 
-                <!-- Zalo -->
                 <a href="https://zalo.me/0984062140" target="_blank" class="contact-btn" rel="noopener">
                     <span class="icon">💬</span>
                     <div>
@@ -337,19 +336,49 @@
     </div>
 
     <script>
+        /* ============================================================
+           VÙNG CẤU HÌNH (THAY ĐỔI THÔNG SỐ TẠI ĐÂY)
+           ============================================================ */
+        const CONFIG = {
+            // 1. Đường link ảnh thiệp mẫu
+            imageUrl: "https://raw.githubusercontent.com/TuanLamVi/sinhnhat/main/thiepmau7.png",
+
+            // 2. Vị trí chữ (Tỷ lệ từ 0 đến 1)
+            // textX: 0.5 là ở giữa ngang, 0.1 là bên trái, 0.9 là bên phải
+            textX: 0.5, 
+            // textY: Vị trí chiều dọc (0.152 là gần cạnh dưới như cũ)
+            textY: 0.152, 
+
+            // 3. Căn lề chữ: "center" (giữa), "left" (trái), "right" (phải)
+            textAlign: "center",
+
+            // 4. Kích thước font mặc định khi mới mở web
+            defaultFontSize: 120,
+
+            // 5. Cấu hình đổ bóng chữ (shadow)
+            shadowColor: "rgba(0,0,0,0.45)",
+            shadowBlur: 10,
+            shadowOffsetX: 2,
+            shadowOffsetY: 3
+        };
+
+        /* ============================================================
+           PHẦN XỬ LÝ HỆ THỐNG (HẠN CHẾ SỬA NẾU KHÔNG CẦN THIẾT)
+           ============================================================ */
+
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
         const popup = document.getElementById("popup");
-        const wrapper = document.getElementById("wrapper");
         const textInput = document.getElementById("text");
         const sizeSlider = document.getElementById("size");
         const sizeValue = document.getElementById("size-value");
         const fontSelect = document.getElementById("font");
         let color = "#000";
-        const CONFIG = {
-            imageUrl: "https://raw.githubusercontent.com/TuanLamVi/sinhnhat/main/thiepmau7.png",
-            fixedBottomY: 0.152
-        };
+
+        // Khởi tạo kích thước ban đầu từ CONFIG
+        sizeSlider.value = CONFIG.defaultFontSize;
+        sizeValue.textContent = CONFIG.defaultFontSize;
+
         let img = new Image();
         img.crossOrigin = "anonymous";
         img.src = CONFIG.imageUrl;
@@ -358,6 +387,7 @@
             canvas.height = img.height;
             draw();
         };
+
         const colors = ["#000000", "#e91e63", "#9c27b0", "#3f51b5", "#d81b60", "#ff5722", "#ffffff"];
         const palette = document.getElementById("palette");
         colors.forEach(c => {
@@ -367,6 +397,7 @@
             d.onclick = () => { color = c; draw(); };
             palette.appendChild(d);
         });
+
         function draw() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0);
@@ -375,43 +406,78 @@
                 const fontSize = parseFloat(sizeSlider.value);
                 ctx.fillStyle = color;
                 ctx.font = `${fontSize}px ${fontSelect.value}`;
-                ctx.textAlign = "center";
+                ctx.textAlign = CONFIG.textAlign;
                 ctx.textBaseline = "bottom";
-                const textY = canvas.height * CONFIG.fixedBottomY;
-                ctx.shadowColor = "rgba(0,0,0,0.45)";
-                ctx.shadowBlur = 10;
-                ctx.shadowOffsetX = 2;
-                ctx.shadowOffsetY = 3;
-                ctx.fillText(text, canvas.width * 0.5, textY);
+
+                // Tính toán vị trí dựa trên CONFIG
+                const posX = canvas.width * CONFIG.textX;
+                const posY = canvas.height * CONFIG.textY;
+
+                // Đổ bóng chữ
+                ctx.shadowColor = CONFIG.shadowColor;
+                ctx.shadowBlur = CONFIG.shadowBlur;
+                ctx.shadowOffsetX = CONFIG.shadowOffsetX;
+                ctx.shadowOffsetY = CONFIG.shadowOffsetY;
+
+                ctx.fillText(text, posX, posY);
+
+                // Reset bóng để không ảnh hưởng lần vẽ sau
                 ctx.shadowBlur = 0;
                 ctx.shadowOffsetX = 0;
                 ctx.shadowOffsetY = 0;
             }
         }
+
+        // Sự kiện thay đổi
         sizeSlider.addEventListener("input", () => {
             sizeValue.textContent = sizeSlider.value;
             draw();
         });
         textInput.addEventListener("input", draw);
         fontSelect.addEventListener("change", draw);
+
+        // --- XỬ LÝ POPUP ---
         function showPopup() {
             popup.style.display = "block";
             setTimeout(() => popup.classList.add("active"), 10);
             textInput.focus();
         }
+
         function hidePopup() {
-            popup.style.display = "none";
             popup.classList.remove("active");
+            setTimeout(() => {
+                popup.style.display = "none";
+            }, 300);
         }
-        wrapper.addEventListener("click", (e) => {
-            if (e.target === wrapper) hidePopup();
+
+        // ĐÓNG POPUP KHI CHẠM RA NGOÀI (Cải thiện theo yêu cầu)
+        document.addEventListener("mousedown", (e) => {
+            const isClickInsidePopup = popup.contains(e.target);
+            const isClickOnOpenBtn = document.getElementById("openPopupBtn").contains(e.target);
+            
+            // Nếu click không nằm trong popup và không phải nút mở popup thì đóng
+            if (!isClickInsidePopup && !isClickOnOpenBtn && popup.classList.contains("active")) {
+                hidePopup();
+            }
         });
+
+        // Hỗ trợ cả sự kiện chạm trên điện thoại
+        document.addEventListener("touchstart", (e) => {
+            const isClickInsidePopup = popup.contains(e.target);
+            const isClickOnOpenBtn = document.getElementById("openPopupBtn").contains(e.target);
+            
+            if (!isClickInsidePopup && !isClickOnOpenBtn && popup.classList.contains("active")) {
+                hidePopup();
+            }
+        });
+
         function save() {
             const a = document.createElement("a");
             a.href = canvas.toDataURL("image/png");
             a.download = "thiep_moi.png";
             a.click();
         }
+
         async function share() {
             if (!navigator.share) return alert("Trình duyệt không hỗ trợ chia sẻ");
             try {
