@@ -28,7 +28,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            position: relative;
+            padding: 10px; /* Thêm khoảng cách tránh dính lề màn hình */
         }
         .container {
             width: 100%;
@@ -37,6 +37,7 @@
             border-radius: 22px;
             padding: 15px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            position: relative;
         }
         .canvas-wrapper {
             position: relative;
@@ -45,292 +46,199 @@
             width: 100%;
             border-radius: 14px;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            cursor: pointer;
         }
+
+        /* ==================== SỬA LỖI POPUP TẠI ĐÂY ==================== */
         .popup {
-            position: absolute;
-            bottom: 12px;
-            left: 12px;
-            right: 12px;
-            background: rgba(255, 255, 255, 0.85); /* Tăng độ đục một chút để dễ nhìn */
-            backdrop-filter: blur(10px);
-            border-radius: 16px;
-            padding: 10px 12px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-            display: none;
-            z-index: 20;
+            position: fixed; /* Chuyển sang fixed để cố định theo màn hình */
+            bottom: -100%; /* Ẩn dưới màn hình khi chưa active */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%; /* Chiều rộng linh hoạt trên mobile */
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px 20px 20px 20px;
+            padding: 15px;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
+            z-index: 9999;
             border: 1px solid rgba(255,255,255,0.5);
-            transition: all 0.3s ease;
+            transition: bottom 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Hiệu ứng trượt từ dưới lên */
         }
         .popup.active {
-            display: block;
-            bottom: 62px;
+            bottom: 20px; /* Khi hiện lên sẽ cách đáy màn hình 20px */
         }
+        /* Overlay nền mờ khi hiện popup */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            z-index: 9998;
+        }
+        .overlay.active {
+            display: block;
+        }
+
         .popup-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 6px;
+            margin-bottom: 12px;
         }
         .popup-title {
-            font-size: 14.5px;
-            font-weight: 600;
+            font-size: 16px;
+            font-weight: 700;
             color: #e91e63;
         }
         .close-btn {
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border: none;
             background: #ff1744;
             color: white;
             border-radius: 50%;
-            font-size: 22px;
-            font-weight: bold;
+            font-size: 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(255,23,68,0.3);
         }
         .section {
-            margin-bottom: 7px;
+            margin-bottom: 10px;
         }
         .section-label {
-            font-size: 11.5px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 700;
             color: #e91e63;
-            margin-bottom: 3px;
+            margin-bottom: 4px;
+            text-transform: uppercase;
         }
         input, select {
             width: 100%;
-            padding: 9px 11px;
-            border-radius: 11px;
+            padding: 10px;
+            border-radius: 10px;
             border: 2px solid #f8c4d0;
-            font-size: 14.8px;
+            font-size: 14px;
             outline: none;
-            box-sizing: border-box;
-        }
-        input:focus, select:focus {
-            border-color: #e91e63;
         }
         .size-slider {
-            background: rgba(248,248,248,0.9);
-            padding: 7px 11px;
-            border-radius: 11px;
+            background: #f9f9f9;
+            padding: 8px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            gap: 9px;
+            gap: 10px;
         }
-        .size-slider input[type="range"] {
-            flex: 1;
-            accent-color: #e91e63;
-        }
-        #size-value {
-            font-weight: 700;
-            font-size: 15.5px;
-            min-width: 36px;
-            text-align: center;
-            color: #e91e63;
-        }
-        .palette {
-            display: flex;
-            justify-content: space-around;
-            margin: 5px 0 3px 0;
-        }
+        .size-slider input { flex: 1; accent-color: #e91e63; }
+        .palette { display: flex; justify-content: space-between; margin-top: 5px; }
         .color-dot {
-            width: 30px;
-            height: 30px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             cursor: pointer;
-            border: 3px solid white;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .action-group {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 9px;
-            margin-top: 10px;
+            gap: 10px;
+            margin-top: 15px;
         }
         button {
-            padding: 11px;
-            border-radius: 11px;
+            padding: 12px;
+            border-radius: 12px;
             border: none;
-            font-weight: 600;
-            font-size: 14.5px;
+            font-weight: 700;
             cursor: pointer;
         }
-        .btn-download {
-            background: linear-gradient(135deg, #ff758c, #ff7eb3);
-            color: white;
-        }
-        .btn-share {
-            background: linear-gradient(135deg, #36d1dc, #5b86e5);
-            color: white;
-        }
+        .btn-download { background: linear-gradient(135deg, #ff758c, #ff7eb3); color: white; }
+        .btn-share { background: linear-gradient(135deg, #36d1dc, #5b86e5); color: white; }
 
-        /* ==================== FOOTER ==================== */
+        /* FOOTER */
         .contact-footer {
-            margin-top: 26px;
-            padding: 20px 18px;
-            background: linear-gradient(135deg, #fff0f5, #ffe4f0);
-            border-radius: 20px;
-            border: 3px solid #ff9a9e;
-            box-shadow: 0 8px 25px rgba(233, 30, 99, 0.22);
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff0f5;
+            border-radius: 15px;
+            border: 2px solid #ff9a9e;
             text-align: center;
         }
-
-        .contact-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #e91e63;
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            letter-spacing: 0.6px;
-        }
-
-        .contact-row {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
-
+        .contact-row { display: flex; gap: 10px; margin-top: 10px; }
         .contact-btn {
             flex: 1;
-            max-width: 175px;
             background: white;
-            border-radius: 16px;
-            padding: 14px 12px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            border-radius: 12px;
+            padding: 8px;
             text-decoration: none;
             color: #e91e63;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 2px solid #f8c4d0;
+            border: 1px solid #f8c4d0;
+            font-size: 12px;
         }
-
-        .contact-btn:hover {
-            transform: translateY(-3px) scale(1.03);
-            box-shadow: 0 12px 25px rgba(233, 30, 99, 0.3);
-            border-color: #ff9a9e;
-        }
-
-        .contact-btn .icon {
-            font-size: 32px;
-            line-height: 1;
-            filter: drop-shadow(0 2px 4px rgba(233, 30, 99, 0.2));
-        }
-
-        .contact-btn div {
-            text-align: left;
-        }
-
-        .contact-btn .label {
-            font-size: 12.5px;
-            font-weight: 600;
-            opacity: 0.85;
-            line-height: 1;
-        }
-
-        .contact-btn .number {
-            font-size: 17px;
-            font-weight: 700;
-            line-height: 1.2;
-            margin-top: 2px;
-        }
-
-        .contact-support {
-            margin-top: 16px;
-            font-size: 13px;
-            color: #e91e63;
-            opacity: 0.9;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
+        .contact-btn strong { display: block; font-size: 14px; }
     </style>
 </head>
 <body>
+
+    <div class="overlay" id="overlay" onclick="hidePopup()"></div>
+
     <div class="container">
-        <div class="canvas-wrapper" id="wrapper">
+        <div class="canvas-wrapper">
             <canvas id="canvas"></canvas>
-            
-            <div class="popup" id="popup">
-                <div class="popup-header">
-                    <div class="popup-title">✏️ Chỉnh sửa thiệp</div>
-                    <button class="close-btn" onclick="hidePopup()">×</button>
-                </div>
-                
-                <div class="section">
-                    <label class="section-label">NỘI DUNG</label>
-                    <input type="text" id="text" placeholder="Nhập tên khách mời...">
-                </div>
-                
-                <div class="section">
-                    <label class="section-label">KIỂU CHỮ</label>
-                    <select id="font">
-                        <option value="'Great Vibes'">Great Vibes - Sang trọng</option>
-                        <option value="'Dancing Script'">Dancing Script</option>
-                        <option value="'Caveat'">Caveat - Viết tay</option>
-                        <option value="'Be Vietnam Pro'">Be Vietnam Pro</option>
-                        <option value="Arial">Arial</option>
-                    </select>
-                </div>
-                
-                <div class="section">
-                    <label class="section-label">KÍCH THƯỚC CHỮ</label>
-                    <div class="size-slider">
-                        <input type="range" id="size" min="40" max="280" value="120" step="2">
-                        <span id="size-value">120</span>
-                    </div>
-                </div>
-                
-                <div class="section">
-                    <label class="section-label">MÀU CHỮ</label>
-                    <div class="palette" id="palette"></div>
-                </div>
-                
-                <div class="action-group">
-                    <button class="btn-download" onclick="save()">📥 TẢI VỀ</button>
-                    <button class="btn-share" onclick="share()">📤 GỬI</button>
-                </div>
-            </div>
         </div>
         
-        <input type="text" id="openPopupBtn" placeholder="Bấm vào đây để chỉnh nội dung thiệp..."
-                onclick="showPopup()" style="margin-top:12px; text-align:center; font-size:15px;">
+        <input type="text" readonly placeholder="Bấm để ghi tên khách mời..." 
+               onclick="showPopup()" 
+               style="margin-top:15px; text-align:center; cursor:pointer; background: #fff5f7;">
 
-        <div class="contact-footer">
-            <div class="contact-title">
-                ❤️ Liên hệ hỗ trợ ngay
+        <div class="popup" id="popup">
+            <div class="popup-header">
+                <div class="popup-title">✏️ Chỉnh sửa thiệp</div>
+                <button class="close-btn" onclick="hidePopup()">×</button>
             </div>
             
-            <div class="contact-row">
-                <a href="tel:0984062140" class="contact-btn">
-                    <span class="icon">📱</span>
-                    <div>
-                        <span class="label">Hotline</span>
-                        <strong class="number">0984 062 140</strong>
-                    </div>
-                </a>
-                
-                <a href="https://zalo.me/0984062140" target="_blank" class="contact-btn" rel="noopener">
-                    <span class="icon">💬</span>
-                    <div>
-                        <span class="label">Zalo</span>
-                        <strong class="number">0984 062 140</strong>
-                    </div>
-                </a>
+            <div class="section">
+                <label class="section-label">Tên khách mời</label>
+                <input type="text" id="text" placeholder="Nhập tên tại đây...">
             </div>
+            
+            <div class="section">
+                <label class="section-label">Kiểu chữ</label>
+                <select id="font">
+                    <option value="'Great Vibes'">Great Vibes (Mềm mại)</option>
+                    <option value="'Dancing Script'">Dancing Script</option>
+                    <option value="'Caveat'">Caveat (Viết tay)</option>
+                    <option value="'Be Vietnam Pro'">Be Vietnam Pro</option>
+                </select>
+            </div>
+            
+            <div class="section">
+                <label class="section-label">Kích thước: <span id="size-value">120</span></label>
+                <div class="size-slider">
+                    <input type="range" id="size" min="40" max="250" value="120">
+                </div>
+            </div>
+            
+            <div class="section">
+                <label class="section-label">Màu chữ</label>
+                <div class="palette" id="palette"></div>
+            </div>
+            
+            <div class="action-group">
+                <button class="btn-download" onclick="save()">📥 TẢI VỀ</button>
+                <button class="btn-share" onclick="share()">📤 GỬI NGAY</button>
+            </div>
+        </div>
 
-            <div class="contact-support">
-                Hỗ trợ 24/7 • Tạo thiệp chỉ trong 10 giây ✨
+        <div class="contact-footer">
+            <div style="font-weight: 700; color: #e91e63; font-size: 13px;">❤️ HỖ TRỢ NHANH</div>
+            <div class="contact-row">
+                <a href="tel:0984062140" class="contact-btn">📱 Hotline<strong>0984 062 140</strong></a>
+                <a href="https://zalo.me/0984062140" target="_blank" class="contact-btn">💬 Zalo<strong>0984 062 140</strong></a>
             </div>
         </div>
     </div>
@@ -340,44 +248,26 @@
            VÙNG CẤU HÌNH (THAY ĐỔI THÔNG SỐ TẠI ĐÂY)
            ============================================================ */
         const CONFIG = {
-            // 1. Đường link ảnh thiệp mẫu
             imageUrl: "https://raw.githubusercontent.com/TuanLamVi/sinhnhat/main/hopdonghuong.png",
-
-            // 2. Vị trí chữ (Tỷ lệ từ 0 đến 1)
-            // textX: 0.5 là ở giữa ngang, 0.1 là bên trái, 0.9 là bên phải
-            textX: 0.75, 
-            // textY: Vị trí chiều dọc (0.152 là gần cạnh dưới như cũ)
-            textY: 0.33, 
-
-            // 3. Căn lề chữ: "center" (giữa), "left" (trái), "right" (phải)
-            textAlign: "center",
-
-            // 4. Kích thước font mặc định khi mới mở web
-            defaultFontSize: 110,
-
-            // 5. Cấu hình đổ bóng chữ (shadow)
-            shadowColor: "rgba(0,0,0,0.45)",
-            shadowBlur: 10,
-            shadowOffsetX: 2,
-            shadowOffsetY: 3
+            textX: 0.75,           // Vị trí ngang (0.5 là chính giữa)
+            textY: 0.33,         // Vị trí dọc (tính từ dưới lên)
+            textAlign: "center",  // Căn lề
+            shadowColor: "rgba(0,0,0,0.4)",
+            shadowBlur: 8
         };
 
         /* ============================================================
-           PHẦN XỬ LÝ HỆ THỐNG (HẠN CHẾ SỬA NẾU KHÔNG CẦN THIẾT)
+           HỆ THỐNG XỬ LÝ
            ============================================================ */
-
         const canvas = document.getElementById("canvas");
         const ctx = canvas.getContext("2d");
         const popup = document.getElementById("popup");
+        const overlay = document.getElementById("overlay");
         const textInput = document.getElementById("text");
         const sizeSlider = document.getElementById("size");
         const sizeValue = document.getElementById("size-value");
         const fontSelect = document.getElementById("font");
-        let color = "#000";
-
-        // Khởi tạo kích thước ban đầu từ CONFIG
-        sizeSlider.value = CONFIG.defaultFontSize;
-        sizeValue.textContent = CONFIG.defaultFontSize;
+        let color = "#000000";
 
         let img = new Image();
         img.crossOrigin = "anonymous";
@@ -388,7 +278,8 @@
             draw();
         };
 
-        const colors = ["#000000", "#e91e63", "#9c27b0", "#3f51b5", "#d81b60", "#ff5722", "#ffffff"];
+        // Tạo bảng màu
+        const colors = ["#000000", "#e91e63", "#9c27b0", "#3f51b5", "#ff5722", "#ffffff"];
         const palette = document.getElementById("palette");
         colors.forEach(c => {
             let d = document.createElement("div");
@@ -409,68 +300,31 @@
                 ctx.textAlign = CONFIG.textAlign;
                 ctx.textBaseline = "bottom";
 
-                // Tính toán vị trí dựa trên CONFIG
-                const posX = canvas.width * CONFIG.textX;
-                const posY = canvas.height * CONFIG.textY;
-
-                // Đổ bóng chữ
                 ctx.shadowColor = CONFIG.shadowColor;
                 ctx.shadowBlur = CONFIG.shadowBlur;
-                ctx.shadowOffsetX = CONFIG.shadowOffsetX;
-                ctx.shadowOffsetY = CONFIG.shadowOffsetY;
-
-                ctx.fillText(text, posX, posY);
-
-                // Reset bóng để không ảnh hưởng lần vẽ sau
+                ctx.fillText(text, canvas.width * CONFIG.textX, canvas.height * CONFIG.textY);
                 ctx.shadowBlur = 0;
-                ctx.shadowOffsetX = 0;
-                ctx.shadowOffsetY = 0;
             }
         }
 
-        // Sự kiện thay đổi
-        sizeSlider.addEventListener("input", () => {
-            sizeValue.textContent = sizeSlider.value;
-            draw();
-        });
-        textInput.addEventListener("input", draw);
-        fontSelect.addEventListener("change", draw);
+        // Lắng nghe thay đổi
+        sizeSlider.oninput = () => { sizeValue.textContent = sizeSlider.value; draw(); };
+        textInput.oninput = draw;
+        fontSelect.onchange = draw;
 
-        // --- XỬ LÝ POPUP ---
+        // ĐÓNG/MỞ POPUP
         function showPopup() {
-            popup.style.display = "block";
-            setTimeout(() => popup.classList.add("active"), 10);
+            popup.classList.add("active");
+            overlay.classList.add("active");
             textInput.focus();
         }
 
         function hidePopup() {
             popup.classList.remove("active");
-            setTimeout(() => {
-                popup.style.display = "none";
-            }, 300);
+            overlay.classList.remove("active");
         }
 
-        // ĐÓNG POPUP KHI CHẠM RA NGOÀI (Cải thiện theo yêu cầu)
-        document.addEventListener("mousedown", (e) => {
-            const isClickInsidePopup = popup.contains(e.target);
-            const isClickOnOpenBtn = document.getElementById("openPopupBtn").contains(e.target);
-            
-            // Nếu click không nằm trong popup và không phải nút mở popup thì đóng
-            if (!isClickInsidePopup && !isClickOnOpenBtn && popup.classList.contains("active")) {
-                hidePopup();
-            }
-        });
-
-        // Hỗ trợ cả sự kiện chạm trên điện thoại
-        document.addEventListener("touchstart", (e) => {
-            const isClickInsidePopup = popup.contains(e.target);
-            const isClickOnOpenBtn = document.getElementById("openPopupBtn").contains(e.target);
-            
-            if (!isClickInsidePopup && !isClickOnOpenBtn && popup.classList.contains("active")) {
-                hidePopup();
-            }
-        });
-
+        // TẢI VỀ
         function save() {
             const a = document.createElement("a");
             a.href = canvas.toDataURL("image/png");
@@ -478,11 +332,12 @@
             a.click();
         }
 
+        // CHIA SẺ
         async function share() {
-            if (!navigator.share) return alert("Trình duyệt không hỗ trợ chia sẻ");
+            if (!navigator.share) return alert("Trình duyệt không hỗ trợ");
             try {
                 const blob = await (await fetch(canvas.toDataURL("image/png"))).blob();
-                const file = new File([blob], "thiep_moi.png", { type: "image/png" });
+                const file = new File([blob], "thiep.png", { type: "image/png" });
                 await navigator.share({ files: [file] });
             } catch (e) {}
         }
